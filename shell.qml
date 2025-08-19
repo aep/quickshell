@@ -51,9 +51,19 @@ ShellRoot {
                 }
             }
             
-            Item {
-                Layout.fillHeight: true
-            }
+                
+                Text {
+                    anchors.centerIn: parent
+                    text: Hyprland.activeToplevel ? Hyprland.activeToplevel.title : "No window"
+                    color: "#ffffff"
+                    font.pixelSize: 12
+                    rotation: 90
+                    transformOrigin: Item.Center
+                    
+                    Component.onCompleted: {
+                        console.log("Window title:", text)
+                    }
+                }
             
             ColumnLayout {
                 Layout.alignment: Qt.AlignBottom
