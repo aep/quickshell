@@ -10,9 +10,39 @@ import QtQuick.Layouts
 ColumnLayout {
     id: root
     spacing: 1
-    
+
     PwObjectTracker {
         objects: [Pipewire.defaultAudioSink]
+    }
+
+    property bool isCapturing: false
+
+    Process {
+        id: captureMonitor
+        running: true
+        command: ["/home/aep/.config/quickshell/brawl/capture-monitor"]
+
+        stdout: SplitParser {
+            onRead: line => {
+                root.isCapturing = (line.trim() === "true")
+            }
+        }
+    }
+
+    StatusIndicator {
+        id: captureIndicator
+        visible: root.isCapturing
+        iconText: "⏺"
+        iconColor: "#ff4444"
+        iconSize: 30
+        Layout.bottomMargin: 4
+
+        SequentialAnimation on iconColor {
+            running: root.isCapturing
+            loops: Animation.Infinite
+            ColorAnimation { to: "#ff4444"; duration: 1000; easing.type: Easing.InOutSine }
+            ColorAnimation { to: "#cc2222"; duration: 1000; easing.type: Easing.InOutSine }
+        }
     }
 
 	/*
